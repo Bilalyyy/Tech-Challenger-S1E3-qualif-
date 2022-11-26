@@ -1,0 +1,11 @@
+ 10
+21:26:48 Lyon-Paris 30
+20:10:55 Paris-Lyon 34
+18:58:48 Lyon-Paris 22
+20:32:57 Paris-Lyon 39
+23:58:33 Lyon-Paris 2
+23:24:31 Paris-Lyon 21
+07:17:38 Lyon-Paris 20
+05:23:37 Lyon-Paris 41
+05:06:42 Lyon-Paris 14
+16:52:32 Lyon-Paris 20

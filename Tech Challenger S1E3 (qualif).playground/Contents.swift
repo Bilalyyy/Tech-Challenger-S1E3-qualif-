@@ -13,15 +13,14 @@ func load(file named: String) -> String? {
 
 let nbrExo = 2
 
-var line = load(file: "input\(nbrExo)")!
+let line = load(file: "input\(nbrExo)")!
 
 struct Voyage {
-    let HoursDepart: String
-    let CityDepart: String
-    let empreinte: String
+    let hoursDepart: String
+    let empreinte: Int
 }
 
-var dateFormater = DateFormatter()
+let dateFormater = DateFormatter()
 dateFormater.dateFormat = "HH:mm:ss"
 
 var sLine = line
@@ -29,53 +28,51 @@ let nbrTotalVoyage = sLine.split(separator: "\n").first
 sLine.removeFirst(nbrTotalVoyage!.count + 2)
 
 let horaireDuJour = sLine.split(separator: "\n")
-var voyages = sortedHoraireDuJour()
 
-func sortedHoraireDuJour() -> [Voyage] {
-    var output = [Voyage]()
-    horaireDuJour.forEach { item in
-        let voyageArray = item.split(separator: " ")
-        let voyage = Voyage(HoursDepart: String(voyageArray.first!),
-                            CityDepart: String(voyageArray[1]),
-                            empreinte: String(voyageArray.last!))
-        output.append(voyage)
+
+var voyagesAller = [Voyage]()
+var voyagesRetour = [Voyage]()
+
+horaireDuJour.forEach { item in
+    let voyageArray = item.split(separator: " ")
+    
+    let hoursDepart = String(voyageArray.first!)
+    let cityDepart = String(voyageArray[1])
+    let empreinte = String(voyageArray.last!)
+
+    if cityDepart == "Paris-Lyon" { // ALLER
+        voyagesAller.append(Voyage(hoursDepart: hoursDepart,
+                                   empreinte: Int(empreinte)!))
+    } else { // Retour
+        voyagesRetour.append(Voyage(hoursDepart: hoursDepart,
+                                    empreinte: Int(empreinte)!))
     }
-    return output
 }
 
+let firstDepart = voyagesAller.sorted(by: {dateFormater.date(from: $0.hoursDepart)! < dateFormater.date(from: $1.hoursDepart)!}).first!
+let lastRetour = voyagesRetour.sorted(by: { dateFormater.date(from: $0.hoursDepart)! < dateFormater.date(from: $1.hoursDepart)!}).last!
 
-var voyageAller: [Voyage] {
-    var filter = voyages.filter { $0.CityDepart == "Paris-Lyon"}
-    return filter.sorted(by: { dateFormater.date(from: $0.HoursDepart)!  < dateFormater.date(from: $1.HoursDepart)! })
-}
-print("voyageAller.count 1 : \(voyageAller.count)")
+let allerClean = voyagesAller.filter { dateFormater.date(from: $0.hoursDepart)! < dateFormater.date(from: lastRetour.hoursDepart)! }
 
-var voyageRetour: [Voyage] {
-    var filter = voyages.filter { $0.CityDepart == "Lyon-Paris"}
-    return filter.sorted(by: { dateFormater.date(from: $0.HoursDepart)!  < dateFormater.date(from: $1.HoursDepart)! })
-}
-print("voyageRetour.count 1 : \(voyageRetour.count)")
+let retourClean = voyagesRetour.filter { dateFormater.date(from: $0.hoursDepart)! > dateFormater.date(from: firstDepart.hoursDepart)! }
+
+let allerSorted = allerClean.sorted(by: { $0.empreinte < $1.empreinte })
+
+let retourSorted = retourClean.sorted(by: { $0.empreinte < $1.empreinte })
 
 
 var probable = Int.max
-voyageAller.forEach { aller in
-    let filterRetourByTime = voyageRetour.filter {
-        guard let hoursDepart = dateFormater.date(from: $0.HoursDepart) else { return false }
-        guard let hoursRetour = dateFormater.date(from: aller.HoursDepart) else { return false }
-        return hoursDepart > hoursRetour
-    }
-    
-    let sortedRetourByEmpreinte = filterRetourByTime.sorted(by: { $0.empreinte < $1.empreinte })
-    
-    for retour in sortedRetourByEmpreinte {
-        let aller = Int(aller.empreinte)!
-        let retour = Int(retour.empreinte)!
-        let total = aller + retour
+allerSorted.forEach { aller in
+    guard aller.empreinte < probable else { return }
+    for retour in retourSorted {
+        let total = retour.empreinte + aller.empreinte
         guard total < probable else { return }
-            probable = total
+        let hourAller = dateFormater.date(from: aller.hoursDepart)!
+        let hourRetour = dateFormater.date(from: retour.hoursDepart)!
+        guard hourAller.compare(hourRetour) == .orderedAscending else { return }
+        probable = total
     }
-
 }
+
 print(probable)
 print("corigé: \(load(file: "output\(nbrExo)")!)")
-

@@ -10,7 +10,7 @@ func load(file named: String) -> String? {
     return content
 }
 
-let nbrExo = 3
+let nbrExo = 4
 
 let line = load(file: "input\(nbrExo)")!
 
@@ -46,11 +46,11 @@ let allerSorted = allerBrut.sorted(by: {
     
     let firstEmpreinte = Int(firstTimeStr)!
     let secondEmpreinte = Int(secondTimeStr)!
-    return firstEmpreinte < firstEmpreinte })
+    return firstEmpreinte < secondEmpreinte })
 
 var probable = Int.max
 allerSorted.forEach { aller in
-    print("test:----\(aller)")
+
     let aItem = aller.split(separator: " ")
     let aEmpreinte = Int(aItem.last!)!
     guard aEmpreinte < probable else { return }

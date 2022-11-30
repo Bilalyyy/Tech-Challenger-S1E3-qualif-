@@ -14,14 +14,14 @@ let nbrExo = 4
 
 let line = load(file: "input\(nbrExo)")!
 
-let dateFormater = DateFormatter()
-dateFormater.dateFormat = "HH:mm:ss"
 var sLine = line
-let nbrTotalVoyage = sLine.split(separator: "\n").first
-sLine.removeFirst(nbrTotalVoyage!.count + 2)
+let nbrTotalLigne = sLine.split(separator: "\n").first
+sLine.removeFirst(nbrTotalLigne!.count + 2)
 
 let allerStr = "Paris-Lyon"
 let retourStr = "Lyon-Paris"
+let dateFormater = DateFormatter()
+dateFormater.dateFormat = "HH:mm:ss"
 
 let horaireDuJour = sLine.split(separator: "\n")
 
@@ -72,7 +72,7 @@ allerSorted.forEach { aller in
 
 let correction = Int(load(file: "output\(nbrExo)")!)
 if correction == probable {
-    print("Bravo tu a réussit le test")
+    print("Bravo, tu as réussi le test")
 } else {
-    print("Helas, tu devait trouver: \(correction!); tu a trouvé: \(probable)")
+    print("Hélas, tu devais trouver : \(correction!); tu as trouvé : \(probable)")
 }

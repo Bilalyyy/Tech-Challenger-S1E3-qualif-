@@ -15,8 +15,6 @@ let nbrExo = 4
 let line = load(file: "input\(nbrExo)")!
 
 var sLine = line
-let nbrTotalLigne = sLine.split(separator: "\n").first
-sLine.removeFirst(nbrTotalLigne!.count + 2)
 
 let allerStr = "Paris-Lyon"
 let retourStr = "Lyon-Paris"
